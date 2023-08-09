@@ -56,7 +56,7 @@ export class PdfService {
     const pdfDoc = await PDFDocument.load(pdfBuffer);
 
     // Fill PDF form fields with formData
-    // Example: pdfDoc.getForm().getTextField('fieldName').setText(formData.fieldName);
+    // pdfDoc.getForm().getTextField('fieldName').setText(formData.fieldName);
 
     const modifiedPdfBuffer = await pdfDoc.save();
     const pdfUint8Array = Uint8Array.from(modifiedPdfBuffer);

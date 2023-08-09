@@ -1,35 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [pdf, setPdf] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const loadPdf = async () => {
+    // get pdf from backend 
+    if (loading) return;
+    setLoading(true);
+    const res = await fetch("http://localhost:3000/pdf");
+    const pdf = await res.blob();
+    setLoading(false);
+    setPdf(pdf);
+  };
+  // useEffect(() => {
+  //   loadPdf();
+  // }, []); 
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="flex flex-col h-screen">
+      <main className="flex h-full">
+        <div className="w-1/5 bg-gray-100 flex flex-col gap-5 h-full p-5">
+          <button className="bg-lime-500 text-white p-2 rounded shadow-xl" onClick={loadPdf}>
+            {loading ? "Loading..." : "Load PDF"}
+          </button>
+          <button className="bg-lime-500 text-white p-2 rounded shadow-xl">
+            Save PDF
+          </button>
+        </div>
+        <div className="w-4/5 bg-gray-200 flex items-center justify-center">
+        {!pdf && <p className="text-2xl text-gray-500">Click "Load PDF" to load the form</p>}
+        {pdf && <iframe src={URL.createObjectURL(pdf)} className="w-full h-full"></iframe>}
+        </div>
+      </main>
+    </div>
+  );
 }
 
-export default App
+export default App;
