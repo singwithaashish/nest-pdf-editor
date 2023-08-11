@@ -1,6 +1,6 @@
 import { PDFDocument } from "pdf-lib";
 import { useRef, useState } from "react";
-import {  pdfjs } from "react-pdf";
+import { pdfjs } from "react-pdf";
 // import textlayer and annotationlayer styles
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-pdf/dist/esm/Page/TextLayer.css";
@@ -27,14 +27,9 @@ function App() {
     setLoading(false);
   };
 
-
   const embedRef = useRef<HTMLObjectElement>(null);
 
   const [pdfKey] = useState<number>(0);
-
-  
-
-
 
   const addvalueToPdf = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -49,20 +44,16 @@ function App() {
     const role2 = (e.target as HTMLFormElement).role2.value;
     const time2 = (e.target as HTMLFormElement).time2.value;
 
-    
-
     // this gives "data:application/pdf;base64,JVBERi0xLjcKJYGBgYEKCjEwIDAgb2JqCjw8Ci9CQ..."
 
-    const binaryPdfData = atob(
-      embedRef.current?.data!.split(",")[1]!
-    );
+    const binaryPdfData = atob(embedRef.current?.data!.split(",")[1]!);
 
     // Convert binary data to Uint8Array
     const uint8PdfData = new Uint8Array(binaryPdfData.length);
     for (let i = 0; i < binaryPdfData.length; i++) {
-        uint8PdfData[i] = binaryPdfData.charCodeAt(i);
+      uint8PdfData[i] = binaryPdfData.charCodeAt(i);
     }
-    
+
     // Load PDF document using PDFDocument.load
     const pdfDoc = await PDFDocument.load(uint8PdfData);
 
@@ -80,13 +71,25 @@ function App() {
     const lastName1Field = form.getTextField(
       "61daa6fb-0143-4faa-9243-790262d903f5lastName"
     );
-    const role1Field = form.getDropdown("61daa6fb-0143-4faa-9243-790262d903f5roles");
-    const time1Field = form.getRadioGroup("61daa6fb-0143-4faa-9243-790262d903f5time");
+    const role1Field = form.getDropdown(
+      "61daa6fb-0143-4faa-9243-790262d903f5roles"
+    );
+    const time1Field = form.getRadioGroup(
+      "61daa6fb-0143-4faa-9243-790262d903f5time"
+    );
 
-    const firstName2Field = form.getTextField("8a06c958-d66d-4e30-a5b5-41ac3abfdbfcfirstName");
-    const lastName2Field = form.getTextField("8a06c958-d66d-4e30-a5b5-41ac3abfdbfclastName");
-    const role2Field = form.getDropdown("8a06c958-d66d-4e30-a5b5-41ac3abfdbfcroles");
-    const time2Field = form.getRadioGroup("8a06c958-d66d-4e30-a5b5-41ac3abfdbfctime");
+    const firstName2Field = form.getTextField(
+      "8a06c958-d66d-4e30-a5b5-41ac3abfdbfcfirstName"
+    );
+    const lastName2Field = form.getTextField(
+      "8a06c958-d66d-4e30-a5b5-41ac3abfdbfclastName"
+    );
+    const role2Field = form.getDropdown(
+      "8a06c958-d66d-4e30-a5b5-41ac3abfdbfcroles"
+    );
+    const time2Field = form.getRadioGroup(
+      "8a06c958-d66d-4e30-a5b5-41ac3abfdbfctime"
+    );
 
     // set the values of the fields
     firstName1Field!.setText(firstName);
@@ -101,22 +104,22 @@ function App() {
 
     // now convert the form back to a pdf
     const filledPdfBytes = await pdfDoc.save();
-    
+
     // convert the array buffer back to a pdf file
     const formData = new FormData();
     const blob = new Blob([filledPdfBytes], { type: "application/pdf" });
     formData.append("file", blob, "example.pdf");
-      // the nest backend is expecting multipart form data
+    // the nest backend is expecting multipart form data
     const res = await fetch("http://localhost:3000/pdf/example.pdf", {
       method: "POST",
       body: formData,
     });
-    
+
     const data = res;
     console.log(data);
     // set the pdf data to the new pdf
     setPdfData(filledPdfBytes);
-  }
+  };
 
   return (
     <div className="flex flex-col h-screen">
@@ -128,87 +131,110 @@ function App() {
           >
             {loading ? "Loading..." : "Load PDF"}
           </button>
-          <form className="flex flex-col gap-5" onSubmit={e => addvalueToPdf(e)}>
-          <button
-          type="submit"
-            className="bg-lime-500 text-white p-2 rounded shadow-xl"
-            // onClick={embedOnLoad}
+          <form
+            className="flex flex-col gap-5"
+            onSubmit={(e) => addvalueToPdf(e)}
           >
-            Save PDF
-          </button>
-
-            <input
-              type="text"
-              name="firstName"
-              id="firstName"
-              placeholder="First Name"
-              className="border border-gray-300 p-2 rounded shadow-xl"
-            />
-            <input
-              type="text"
-              name="lastName"
-              id="lastName"
-              placeholder="Last Name"
-              className="border border-gray-300 p-2 rounded shadow-xl"
-            />
-            <select name="role1" id="role1">
-              <option value="developer">developer</option>
-              <option value="testing">testing</option>
-              <option value="admin">admin</option>
-              <option value="marketing">marketing</option>
-            </select>
-            {/* parttime or fulltime radio */}
-            <div className="flex gap-5">
-              <div>
+            <button
+              type="submit"
+              className="bg-lime-500 text-white p-2 rounded shadow-xl"
+              // onClick={embedOnLoad}
+            >
+              Save PDF
+            </button>
+            {pdfData && (
+              <>
                 <input
-                  type="radio"
-                  name="time"
-                  id="parttime"
-                  value="parttime"
+                  type="text"
+                  name="firstName"
+                  id="firstName"
+                  placeholder="First Name"
+                  className="border border-gray-300 p-2 rounded shadow-xl"
                 />
-                <label htmlFor="parttime">Part Time</label>
-              </div>
-              <div>
                 <input
-                  type="radio"
-                  name="time"
-                  id="fulltime"
-                  value="fulltime"
+                  type="text"
+                  name="lastName"
+                  id="lastName"
+                  placeholder="Last Name"
+                  className="border border-gray-300 p-2 rounded shadow-xl"
                 />
-                <label htmlFor="fulltime">Full Time</label>
-              </div>
-            </div>
-            <input type="text" name="firstName2" id="firstName2" placeholder="First Name" />
-            <input type="text" name="lastName2" id="lastName2" placeholder="Last Name" />
-            <select name="role2" id="role2">
-            <option value="developer">developer</option>
-              <option value="testing">testing</option>
-              <option value="admin">admin</option>
-              <option value="marketing">marketing</option>
-            </select>
-
-            <div className="flex gap-5">
-              <div>
+                <select
+                  name="role1"
+                  id="role1"
+                  className="border border-gray-300 p-2 rounded shadow-xl"
+                  defaultValue={"developer"}
+                >
+                  <option value="developer">developer</option>
+                  <option value="testing">testing</option>
+                  <option value="admin">admin</option>
+                  <option value="marketing">marketing</option>
+                </select>
+                {/* parttime or fulltime radio */}
+                <div className="flex gap-5">
+                  <div>
+                    <input
+                      type="radio"
+                      name="time"
+                      id="parttime"
+                      value="parttime"
+                      defaultChecked
+                    />
+                    <label htmlFor="parttime">Part Time</label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      name="time"
+                      id="fulltime"
+                      value="fulltime"
+                    />
+                    <label htmlFor="fulltime">Full Time</label>
+                  </div>
+                </div>
                 <input
-                  type="radio"
-                  name="time2"
-                  id="parttime2"
-                  value="parttime"
+                  type="text"
+                  name="firstName2"
+                  id="firstName2"
+                  className="border border-gray-300 p-2 rounded shadow-xl"
+                  placeholder="First Name"
                 />
-                <label htmlFor="parttime2">Part Time</label>
-              </div>
-              <div>
                 <input
-                  type="radio"
-                  name="time2"
-                  id="fulltime2"
-                  value="fulltime"
+                  type="text"
+                  name="lastName2"
+                  id="lastName2"
+                  className="border border-gray-300 p-2 rounded shadow-xl"
+                  placeholder="Last Name"
                 />
-                <label htmlFor="fulltime2">Full Time</label>
-              </div>
-            </div>
+                <select name="role2" id="role2" defaultValue="developer" className="border border-gray-300 p-2 rounded shadow-xl">
+                  <option value="developer">developer</option>
+                  <option value="testing">testing</option>
+                  <option value="admin">admin</option>
+                  <option value="marketing">marketing</option>
+                </select>
 
-
+                <div className="flex gap-5">
+                  <div>
+                    <input
+                      type="radio"
+                      name="time2"
+                      id="parttime2"
+                      value="parttime"
+                    />
+                    <label htmlFor="parttime2">Part Time</label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      name="time2"
+                      id="fulltime2"
+                      value="fulltime"
+                      defaultChecked
+                    />
+                    <label htmlFor="fulltime2">Full Time</label>
+                  </div>
+                </div>
+              </>
+            )}
           </form>
         </div>
         <div className="w-4/5 bg-gray-200 flex items-center justify-center">
@@ -233,8 +259,8 @@ function App() {
           {/* After attempting with a lot of techniques, I still couldn't extract user entered data from pdf, pdfjs express looked promising though */}
           {pdfData && (
             <object
-            ref={embedRef}
-            key={pdfKey}
+              ref={embedRef}
+              key={pdfKey}
               data={`data:application/pdf;base64,${btoa(
                 new Uint8Array(pdfData).reduce(
                   (data, byte) => data + String.fromCharCode(byte),
@@ -244,13 +270,10 @@ function App() {
               type="application/pdf"
               className="w-full h-full"
               // onLoad={embedOnLoad}
-
             >
               <p>PDF viewer is not supported by your browser.</p>
             </object>
           )}
-
-         
         </div>
       </main>
     </div>
