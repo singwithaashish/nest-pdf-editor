@@ -28,74 +28,13 @@ function App() {
   };
 
 
-  const iframeRef = useRef<HTMLIFrameElement>(null);
   const embedRef = useRef<HTMLObjectElement>(null);
 
-  const [pdfKey, setPdfKey] = useState<number>(0);
+  const [pdfKey] = useState<number>(0);
 
   
 
-  const embedOnLoad = async () => {
-    // Attempt to get the iframe's document
-    console.log(embedRef.current?.data);
 
-    // add a listener to embedRef
-    // to listen for messages from the iframe
-
-    embedRef.current?.contentWindow?.addEventListener(
-      "message",
-      (event: MessageEvent) => {
-        console.log("message received from iframe", event.data);
-      }
-    );
-
-    // this gives "data:application/pdf;base64,JVBERi0xLjcKJYGBgYEKCjEwIDAgb2JqCjw8Ci9CQ..."
-
-    const binaryPdfData = atob(
-      embedRef.current?.data!.split(",")[1]!
-    );
-
-    // Convert binary data to Uint8Array
-    const uint8PdfData = new Uint8Array(binaryPdfData.length);
-    for (let i = 0; i < binaryPdfData.length; i++) {
-        uint8PdfData[i] = binaryPdfData.charCodeAt(i);
-    }
-    
-    // Load PDF document using PDFDocument.load
-    const pdfDoc = await PDFDocument.load(uint8PdfData);
-
-    const form = pdfDoc.getForm();
-
-    const firstName1Field = form.getTextField(
-      "61daa6fb-0143-4faa-9243-790262d903f5firstName"
-    );
-    const lastName1Field = form.getTextField(
-      "61daa6fb-0143-4faa-9243-790262d903f5lastName"
-    );
-
-    // formData.append("file", blob, "example.pdf");
-
-    // form.getTextField("61daa6fb-0143-4faa-9243-790262d903f5firstName")!.setText("John");
-    // form.getTextField("61daa6fb-0143-4faa-9243-790262d903f5lastName")!.setText("Doe");
-
-    // // now convert the form back to a pdf
-    // const filledPdfBytes = await pdfDoc.save();
-    // // set the pdf data to the new pdf
-    // setPdfData(filledPdfBytes);
-
-
-
-    console.log(firstName1Field.getText(), lastName1Field.getText());
-
-    // setPdfKey((prev) => prev + 1);
-
-
-
-    // setup a message listener to receive messages from the embedded pdf
-    window.addEventListener("message", (event) => {
-      console.log("message received", event);
-    });
-  }
 
   const addvalueToPdf = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
