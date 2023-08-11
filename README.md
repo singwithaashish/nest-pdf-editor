@@ -52,4 +52,7 @@ server
     └── jest-e2e.json
 ```
 
-## Screenshots
+## Screens
+![Screenshot from 2023-08-11 22-21-09](https://github.com/singwithaashish/nest-pdf-editor/assets/52033403/c484e6b0-96e5-4db1-b306-e13b149cfef8)
+![Screenshot from 2023-08-11 22-20-23](https://github.com/singwithaashish/nest-pdf-editor/assets/52033403/ab92b457-8e69-4e1b-bd79-4e76da97b526)
+hots
