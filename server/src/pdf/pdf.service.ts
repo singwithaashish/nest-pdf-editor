@@ -33,7 +33,21 @@ export class PdfService {
       where: { filename },
     });
 
-    return readFileSync(`./pdfs/${pdf.filename}`);
+    return pdf.buffer; 
+  }
+
+  async savePdf(filename: string, pdfBuffer: Buffer): Promise<void> {
+    const pdf = await this.pdfRepository.findOne({
+      where: { filename },
+    });
+
+    console.log(pdf.buffer)
+    console.log(pdfBuffer)
+    if (!pdf) {
+      throw new NotFoundException(`PDF with filename '${filename}' not found.`);
+    }
+    pdf.buffer = pdfBuffer; // Update the PDF buffer
+    await this.pdfRepository.save(pdf);
   }
 
   async getPdfBuffer(filename: string): Promise<Buffer> {

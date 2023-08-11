@@ -3,6 +3,7 @@ import {
   Get,
   Param,
   Post,
+  Req,
   Res,
   UploadedFile,
   UseInterceptors,
@@ -38,4 +39,25 @@ export class PdfController {
 
     res.end();
   }
+
+  @Get(':filename')
+  async getPdf(@Param('filename') filename: string, @Res() res: Response) {
+    const pdfBuffer = await this.pdfService.getPdfBuffer(filename);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+
+    res.send(pdfBuffer);
+  }
+
+  @Post(':filename')
+  @UseInterceptors(FileInterceptor('file'))
+  async savePdf(
+    @Param('filename') filename: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    const pdfBuffer = file.buffer;
+    await this.pdfService.savePdf(filename, pdfBuffer);
+    return 'PDF saved successfully.';
+  }
+
 }
