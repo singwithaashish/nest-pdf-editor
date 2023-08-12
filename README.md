@@ -10,13 +10,16 @@
 
 ## Installation
 - Clone the repo `git clone` 
-- Cd into client folder `cd client`
-- Install dependencies `npm install`
-- Run the app `npm run dev`
-
 - Cd into server folder `cd server` on another terminal
 - Install dependencies `npm install`
 - Run the app `npm run start:dev`
+
+- Cd into client folder `cd frontend`
+- Install dependencies `npm install`
+- Run the app `npm run start`
+- Press `y` to run the app on another port
+
+
 
 ## Usage
 - Click on 'Load PDF' to load a pdf file
