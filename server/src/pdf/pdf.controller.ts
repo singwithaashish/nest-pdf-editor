@@ -25,20 +25,7 @@ export class PdfController {
     return 'PDF uploaded successfully.';
   }
 
-  @Get()
-  async getAllPdfs(@Res() res: Response) {
-    const pdfs = await this.pdfService.getAllPdfs();
-
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'attachment; filename="pdfs.zip"');
-
-    for (const pdf of pdfs) {
-      const pdfBuffer = await this.pdfService.getPdfBuffer(pdf.filename);
-      res.write(pdfBuffer);
-    }
-
-    res.end();
-  }
+  
 
   @Get(':filename')
   async getPdf(@Param('filename') filename: string, @Res() res: Response) {

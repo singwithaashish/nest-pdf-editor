@@ -1,11 +1,12 @@
 import { PDFDocument } from "pdf-lib";
 import { useRef, useState } from "react";
 import { pdfjs } from "react-pdf";
-// import textlayer and annotationlayer styles
-import "react-pdf/dist/esm/Page/AnnotationLayer.css";
-import "react-pdf/dist/esm/Page/TextLayer.css";
+import { Document, Page } from "react-pdf";
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+import "react-pdf/dist/esm/Page/TextLayer.css";
+import "react-pdf/dist/esm/Page/AnnotationLayer.css";
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+
 function App() {
   const [loading, setLoading] = useState<boolean>(false);
   const [pdfData, setPdfData] = useState<any>(null);
@@ -30,6 +31,29 @@ function App() {
   const embedRef = useRef<HTMLObjectElement>(null);
 
   const [pdfKey] = useState<number>(0);
+
+  const savePdf = async () => {
+    
+
+    const pdfDoc = await PDFDocument.load(pdfData);
+
+    const form = pdfDoc.getForm();
+
+    // get all the fields
+
+    form.getFields().forEach((field) => {
+
+      console.log(field.getName());
+    });
+
+    const firstName1Field = form.getTextField(
+      "61daa6fb-0143-4faa-9243-790262d903f5firstName"
+    );
+
+    console.log(firstName1Field);
+
+    }
+
 
   const addvalueToPdf = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -136,9 +160,10 @@ function App() {
             onSubmit={(e) => addvalueToPdf(e)}
           >
             <button
-              type="submit"
+              // type="submit"
               className="bg-lime-500 text-white p-2 rounded shadow-xl"
               // onClick={embedOnLoad}
+              onClick={savePdf}
             >
               Save PDF
             </button>
@@ -237,7 +262,7 @@ function App() {
             )}
           </form>
         </div>
-        <div className="w-4/5 bg-gray-200 flex items-center justify-center">
+        <div className="w-4/5 bg-gray-200 flex items-center justify-center h-full">
           {!pdfData && (
             <p className="text-2xl text-gray-500">
               Click "Load PDF" to load the form
@@ -257,7 +282,7 @@ function App() {
             </iframe>
           )} */}
           {/* After attempting with a lot of techniques, I still couldn't extract user entered data from pdf, pdfjs express looked promising though */}
-          {pdfData && (
+          {/* {pdfData && (
             <object
               ref={embedRef}
               key={pdfKey}
@@ -273,7 +298,19 @@ function App() {
             >
               <p>PDF viewer is not supported by your browser.</p>
             </object>
-          )}
+          )} */}
+          {
+            pdfData && (
+              <Document file={pdfData} onLoadSuccess={
+                (pdf) => {
+                  console.log(pdf);
+                }
+              }>
+                <Page pageNumber={1} renderMode="svg" renderForms renderTextLayer 
+                 />
+              </Document>
+            )
+          }
         </div>
       </main>
     </div>

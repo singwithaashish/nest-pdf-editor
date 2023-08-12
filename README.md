@@ -1,4 +1,3 @@
-## TODO
 **nest pdf editor** is a simple pdf editor where you can edit the form fields of a pdf file. It is written in React/Typescript on the frontend and Nest on the backend. 
 
 ## Table of Contents
@@ -6,7 +5,6 @@
 - [Usage](#usage)
 - [Folder Structure](#folder-structure)
 - [Screenshots](#screenshots)
-
 
 
 

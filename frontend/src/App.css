@@ -1,0 +1,23 @@
+.MyComponent {
+  background-color: #eee;
+  min-height: 100vh;
+}
+
+.pdf-form{
+  height: 100%;
+  width: 70%;
+  margin-left: auto;
+}
+
+.button {
+  background-color: #7a7a7a;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  margin: 10px;
+  border-radius: 6px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
